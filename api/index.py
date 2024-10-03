@@ -69,7 +69,8 @@ async def scrape(item:UrlModel):
 
     if vector_store is not None and len(document_ids) > 0:
         vector_store.delete(ids=document_ids)
-        print("vector store boorado --> ",document_ids)
+        logging.info("Vector Store Deleted")
+        #print("vector store boorado --> ",document_ids)
         
 
     chat_history.clear()
@@ -137,7 +138,7 @@ def get_conversational_rag_chain(retriever_chain):
 
     prompt = ChatPromptTemplate.from_messages(messages=messages)
 
-    stuff_documents_chain = create_stuff_documents_chain(llm,prompt)
+    stuff_documents_chain = create_stuff_documents_chain(model,prompt)
 
     return create_retrieval_chain(retriever_chain,stuff_documents_chain)
 
