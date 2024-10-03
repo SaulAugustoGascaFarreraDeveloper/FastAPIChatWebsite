@@ -29,7 +29,7 @@ embed = OllamaEmbeddings(model="nomic-embed-text")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://tech-bot-saas.vercel.app/","*"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"]
@@ -86,9 +86,9 @@ async def scrape(item:UrlModel):
     doc_chunks = text_splitter.split_documents(doc_pages)
 
     document_ids = [str(uuid.uuid4()) for _ in doc_chunks]
-    vector_store = Chroma.from_documents(doc_chunks,embed,ids=document_ids)
+    vector_store = Chroma.from_documents(doc_chunks,OpenAIEmbeddings(),ids=document_ids)
     
-    print(document_ids)
+    #print(document_ids)
  
     return {"message":f"Vetor Store Initialized with {url}"}
 
@@ -122,7 +122,7 @@ def get_context_retriever_chain(vector_store: Chroma):
 
     prompt = ChatPromptTemplate.from_messages(messages=messages)
 
-    retriever_chain = create_history_aware_retriever(llm,retriever,prompt)
+    retriever_chain = create_history_aware_retriever(model,retriever,prompt)
 
     return retriever_chain
 
